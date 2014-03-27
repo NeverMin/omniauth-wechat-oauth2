@@ -1,6 +1,8 @@
 Omniauth-wechat-oauth2
 ======================
 
+[![Build Status](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2.svg)](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2)
+
 Wechat OAuth2 Strategy for OmniAuth 1.0. 
 
 You need to get a wechat API key at: http://mp.weixin.qq.com
