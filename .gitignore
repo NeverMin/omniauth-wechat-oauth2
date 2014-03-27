@@ -2,6 +2,9 @@
 *.rbc
 .bundle
 .config
+.ruby-version
+.ruby-gemset
+Gemfile.lock
 coverage
 InstalledFiles
 lib/bundler/man
