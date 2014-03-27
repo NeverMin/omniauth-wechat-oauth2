@@ -1,11 +1,11 @@
-mniauth-wechat-oauth2
+Omniauth-wechat-oauth2
 ======================
 
 Wechat OAuth2 Strategy for OmniAuth 1.0. 
 
 You need to get a wechat API key at: http://mp.weixin.qq.com
 
-Wechat oauth2 specification can be found at: http://mp.weixin.qq.com/wiki/index.php?title=%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E5%9F%BA%E6%9C%AC%E4%BF%A1%E6%81%AF
+Wechat oauth2 specification can be found at: http://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
 
 ## Installation
 
@@ -62,7 +62,7 @@ Here's an example of an authentication hash available in the callback by accessi
     :credentials => {
         :token => "token",
         :refresh_token => "another_token",
-        :expires_at => 1354920555,
+        :expires_at => 7200,
         :expires => true
     },
     :extra => {
