@@ -34,7 +34,7 @@ You can now access the OmniAuth Wechat OAuth2 URL: `/auth/wechat`
 
 You can configure several options, which you pass in to the `provider` method via a hash:
 
-* `scope`: Default is "snsapi_userinfo". It can either be *snsapi_base* or *snsapi_userinfo*. When scope is "snsapi_userinfo", after wechat user is authenticated, app can query userinfo using the acuired access_token.
+* `scope`: Default is "snsapi_userinfo". It can either be *snsapi_base* or *snsapi_userinfo*. When scope is "snsapi_userinfo", after wechat user is authenticated, app can query userinfo using the acquired access_token.
 
 For devise user, you can set up scope in your devise.rb as following.
 
