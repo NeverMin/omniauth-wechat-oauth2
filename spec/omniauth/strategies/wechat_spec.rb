@@ -114,6 +114,8 @@ describe OmniAuth::Strategies::Wechat do
       })}
 
       specify "will query for user info" do
+        response_body = %({"openid": "OPENID","nickname": "\x14\x1fNICKNAME", "sex": "1", "province": "PROVINCE", "city": "CITY", "country": "COUNTRY", "headimgurl": "header_image_url", "privilege": ["PRIVILEGE1", "PRIVILEGE2"]})
+
         response_hash = {
           "openid" => "OPENID",
           "nickname" => "NICKNAME",
@@ -122,15 +124,15 @@ describe OmniAuth::Strategies::Wechat do
           "city" => "CITY",
           "country" => "COUNTRY",
           "headimgurl" => "header_image_url", 
-          "privilege" => [ "PRIVILEGE1" "PRIVILEGE2"]
+          "privilege" => ["PRIVILEGE1", "PRIVILEGE2"]
         }
 
         client.should_receive(:request).with do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
           expect(opts[:params]).to eq("openid"=> "openid", "access_token"=> "access_token")
-          expect(opts[:parse]).to eq(:json)
-        end.and_return(double("response", parsed:response_hash))
+          expect(opts[:parse]).to eq(:text)
+        end.and_return(double("response", body: response_body))
 
         expect(subject.raw_info).to eq(response_hash)
       end
