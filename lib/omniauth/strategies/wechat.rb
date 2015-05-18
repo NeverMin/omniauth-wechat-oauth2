@@ -50,6 +50,8 @@ module OmniAuth
             @raw_info = JSON.parse(response.body.gsub(/[\u0000-\u001f]+/, ''))
           else
             @raw_info = {"openid" => @uid }
+            @raw_info.merge!("unionid" => access_token["unionid"]) if access_token["unionid"]
+            @raw_info
           end
         end
       end
