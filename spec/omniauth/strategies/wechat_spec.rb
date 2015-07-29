@@ -130,7 +130,7 @@ describe OmniAuth::Strategies::Wechat do
         client.should_receive(:request).with do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
-          expect(opts[:params]).to eq("openid"=> "openid", "access_token"=> "access_token")
+          expect(opts[:params]).to eq("openid"=> "openid", "lang"=>"zh_CN", "access_token"=> "access_token")
           expect(opts[:parse]).to eq(:text)
         end.and_return(double("response", body: response_body))
 
