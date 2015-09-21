@@ -21,6 +21,12 @@ describe OmniAuth::Strategies::Wechat do
     OmniAuth.config.test_mode = false
   end
 
+  describe '#name' do
+    specify 'is wechat' do
+      expect(subject.name).to eq('wechat')
+    end
+  end
+
   describe '#client_options' do
     specify 'has site' do
       expect(subject.client.site).to eq('https://api.weixin.qq.com')
@@ -44,6 +50,13 @@ describe OmniAuth::Strategies::Wechat do
   describe "#token_params" do
     specify "token response should be parsed as json" do
       expect(subject.token_params[:parse]).to eq(:json)
+    end
+  end
+
+  describe "option userinfo_params" do
+    specify "default lang is en" do
+      expect(subject.options[:userinfo_params]).to be_a(Hash)
+      expect(subject.options[:userinfo_params][:lang]).to eq('en')
     end
   end
 
@@ -130,7 +143,7 @@ describe OmniAuth::Strategies::Wechat do
         client.should_receive(:request).with do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
-          expect(opts[:params]).to eq("openid"=> "openid", "access_token"=> "access_token")
+          expect(opts[:params]).to eq("openid"=> "openid", "lang"=> "en", "access_token"=> "access_token")
           expect(opts[:parse]).to eq(:text)
         end.and_return(double("response", body: response_body))
 
