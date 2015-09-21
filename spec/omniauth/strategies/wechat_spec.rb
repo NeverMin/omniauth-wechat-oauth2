@@ -21,6 +21,12 @@ describe OmniAuth::Strategies::Wechat do
     OmniAuth.config.test_mode = false
   end
 
+  describe '#name' do
+    specify 'is wechat' do
+      expect(subject.name).to eq('wechat')
+    end
+  end
+
   describe '#client_options' do
     specify 'has site' do
       expect(subject.client.site).to eq('https://api.weixin.qq.com')
