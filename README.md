@@ -45,6 +45,15 @@ config.omniauth :wechat, ENV["WECHAT_APP_ID"], ENV["WECHAT_APP_SECRET"],
     :authorize_params => {:scope => "snsapi_base"}
 ```
 
+* `userinfo_params[:lang]`: Default is "en". It can either be *en* or *zh_CN* or *zh_TW*.
+
+For devise user, you can set up userinfo_params[:lang] in your devise.rb as following.
+
+```ruby
+config.omniauth :wechat, ENV["WECHAT_APP_ID"], ENV["WECHAT_APP_SECRET"],
+    :userinfo_params => {:lang => "zh_CN"}
+```
+
 ## Auth Hash
 
 Here's an example of an authentication hash available in the callback by accessing `request.env["omniauth.auth"]`:
@@ -64,7 +73,7 @@ Here's an example of an authentication hash available in the callback by accessi
     :credentials => {
         :token => "token",
         :refresh_token => "another_token",
-        :expires_at => 7200,
+        :expires_at => 1420070400,
         :expires => true
     },
     :extra => {

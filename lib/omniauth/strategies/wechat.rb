@@ -16,6 +16,8 @@ module OmniAuth
 
       option :token_params, {parse: :json}
 
+      option :userinfo_params, {lang: 'en'}
+
       uid do
         raw_info['openid']
       end
@@ -46,7 +48,7 @@ module OmniAuth
         @raw_info ||= begin
           access_token.options[:mode] = :query
           if access_token["scope"] == "snsapi_userinfo"
-            response = access_token.get("/sns/userinfo", :params => {"openid" => @uid}, parse: :text)
+            response = access_token.get("/sns/userinfo", :params => options[:userinfo_params].merge({"openid" => @uid}), parse: :text)
             @raw_info = JSON.parse(response.body.gsub(/[\u0000-\u001f]+/, ''))
           else
             @raw_info = {"openid" => @uid }

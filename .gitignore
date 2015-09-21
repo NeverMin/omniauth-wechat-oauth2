@@ -2,6 +2,7 @@
 *.rbc
 .bundle
 .config
+.versions.conf
 .ruby-version
 .ruby-gemset
 Gemfile.lock

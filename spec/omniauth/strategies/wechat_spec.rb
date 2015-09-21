@@ -47,6 +47,13 @@ describe OmniAuth::Strategies::Wechat do
     end
   end
 
+  describe "option userinfo_params" do
+    specify "default lang is en" do
+      expect(subject.options[:userinfo_params]).to be_a(Hash)
+      expect(subject.options[:userinfo_params][:lang]).to eq('en')
+    end
+  end
+
   describe 'state' do
     specify 'should set state params for request as a way to verify CSRF' do
       expect(subject.authorize_params['state']).not_to be_nil
@@ -130,7 +137,7 @@ describe OmniAuth::Strategies::Wechat do
         client.should_receive(:request).with do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
-          expect(opts[:params]).to eq("openid"=> "openid", "access_token"=> "access_token")
+          expect(opts[:params]).to eq("openid"=> "openid", "lang"=> "en", "access_token"=> "access_token")
           expect(opts[:parse]).to eq(:text)
         end.and_return(double("response", body: response_body))
 
