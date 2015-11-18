@@ -7,8 +7,7 @@ Wechat OAuth2 Strategy for OmniAuth 1.0.
 
 You need to get a wechat API key at: http://mp.weixin.qq.com
 
-Wechat oauth2 specification can be found at: http://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
-
+Wechat oauth2 specification can be found at: [网页授权获取用户基本信息](http://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html)
 ## Installation
 
 Add to your `Gemfile`:
