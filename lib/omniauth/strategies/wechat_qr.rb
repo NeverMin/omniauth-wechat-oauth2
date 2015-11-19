@@ -3,6 +3,8 @@ require "omniauth-oauth2"
 module OmniAuth
   module Strategies
     class WechatQr < Wechat
+      option :name, 'wechat_qr'
+
       option :client_options, {
         site:          "https://api.weixin.qq.com",
         authorize_url: "https://open.weixin.qq.com/connect/qrconnect#wechat_redirect",
