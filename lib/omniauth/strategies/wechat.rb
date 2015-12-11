@@ -23,11 +23,13 @@ module OmniAuth
       info do
         {
           nickname:   raw_info['nickname'],
+          name: raw_info['name'],
           sex:        raw_info['sex'],
           province:   raw_info['province'],
           city:       raw_info['city'],
           country:    raw_info['country'],
-          headimgurl: raw_info['headimgurl']
+          headimgurl: raw_info['headimgurl'],
+          image: raw_info['headimgurl']
         }
       end
 
