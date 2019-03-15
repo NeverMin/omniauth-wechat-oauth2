@@ -5,7 +5,7 @@ Omniauth-wechat-oauth2
 [![Security Check](https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master.svg)][security]
 [![Build Status](https://travis-ci.org/NeverMin/omniauth-wechat-oauth2.svg)][travis]
 
-[gem]: https://rubygems.org/gems/omniauth-weibo-oauth2
+[gem]: https://rubygems.org/gems/omniauth-wechat-oauth2
 [security]: https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master
 [travis]: https://travis-ci.org/NeverMin/omniauth-wechat-oauth2
 
