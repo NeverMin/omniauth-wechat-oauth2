@@ -14,7 +14,10 @@ Gem::Specification.new do |s|
 
   s.author       = 'Skinnyworm'
   s.email        = 'askinnyworm@gmail.com'
-  s.homepage     = 'https://github.com/skinnyworm/omniauth-wechat-oauth2'
+
+  s.author       = 'Never Min'
+  s.email        = 'Never.Min@gmail.com'
+  s.homepage     = 'https://github.com/nevermin/omniauth-wechat-oauth2'
 
   s.add_dependency 'omniauth', '~> 1.3.2'
   s.add_dependency 'omniauth-oauth2', '~> 1.1.1'
