@@ -12,12 +12,10 @@ Gem::Specification.new do |s|
   s.requirements << 'none'
   s.required_ruby_version     = '>= 2.0.0'
 
-  s.author       = 'Skinnyworm'
-  s.email        = 'askinnyworm@gmail.com'
-
-  s.author       = 'Never Min'
-  s.email        = 'Never.Min@gmail.com'
+  s.author       = ['Skinnyworm', 'Never Min']
+  s.email        = ['askinnyworm@gmail.com', 'Never.Min@gmail.com']
   s.homepage     = 'https://github.com/nevermin/omniauth-wechat-oauth2'
+  s.license      = 'MIT'
 
   s.add_dependency 'omniauth', '~> 1.3.2'
   s.add_dependency 'omniauth-oauth2', '~> 1.1.1'
