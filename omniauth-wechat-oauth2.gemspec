@@ -10,14 +10,13 @@ Gem::Specification.new do |s|
   s.files        = Dir['README.md', 'lib/**/*']
   s.require_path = 'lib'
   s.requirements << 'none'
-  s.required_ruby_version     = '>= 1.9.3'
-  s.required_rubygems_version = '>= 1.8.23'
+  s.required_ruby_version     = '>= 2.0.0'
 
   s.author       = 'Skinnyworm'
   s.email        = 'askinnyworm@gmail.com'
   s.homepage     = 'https://github.com/skinnyworm/omniauth-wechat-oauth2'
 
-  s.add_dependency 'omniauth', '~> 1.0'
-  s.add_dependency 'omniauth-oauth2', '~> 1.0'
+  s.add_dependency 'omniauth', '~> 1.3.2'
+  s.add_dependency 'omniauth-oauth2', '~> 1.1.1'
   s.add_development_dependency 'rspec', '~> 2.7'
 end
