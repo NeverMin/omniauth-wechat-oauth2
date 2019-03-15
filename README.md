@@ -1,13 +1,20 @@
 Omniauth-wechat-oauth2
 ======================
 
-[![Build Status](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2.svg)](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2) [![Gem Version](https://badge.fury.io/rb/omniauth-wechat-oauth2.png)](http://badge.fury.io/rb/omniauth-wechat-oauth2)
+[![Gem Version](https://img.shields.io/gem/v/omniauth-wechat-oauth2.svg)][gem]
+[![Security Check](https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master.svg)][security]
+[![Build Status](https://travis-ci.org/NeverMin/omniauth-wechat-oauth2.svg)][travis]
 
-Wechat OAuth2 Strategy for OmniAuth 1.0. 
+[gem]: https://rubygems.org/gems/omniauth-weibo-oauth2
+[security]: https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master
+[travis]: https://travis-ci.org/NeverMin/omniauth-wechat-oauth2
 
-You need to get a wechat API key at: http://mp.weixin.qq.com
 
-Wechat oauth2 specification can be found at: http://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
+Wechat OAuth2 Strategy for OmniAuth 1.0.
+
+You need to get a wechat API key at: https://mp.weixin.qq.com
+
+Wechat oauth2 specification can be found at: https://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
 
 ## Installation
 
