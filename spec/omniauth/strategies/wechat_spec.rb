@@ -27,7 +27,7 @@ describe OmniAuth::Strategies::Wechat do
     end
 
     specify 'has authorize_url' do
-      expect(subject.client.options[:authorize_url]).to eq('https://open.weixin.qq.com/connect/oauth2/authorize#wechat_redirect')
+      expect(subject.client.options[:authorize_url]).to eq('https://open.weixin.qq.com/connect/qrconnect?#wechat_redirect')
     end
 
     specify 'has token_url' do
@@ -36,8 +36,8 @@ describe OmniAuth::Strategies::Wechat do
   end
 
   describe "#authorize_params" do
-    specify "default scope is snsapi_userinfo" do
-      expect(subject.authorize_params[:scope]).to eq("snsapi_userinfo")
+    specify "default scope is snsapi_login" do
+      expect(subject.authorize_params[:scope]).to eq("snsapi_login")
     end
   end
 
@@ -67,7 +67,7 @@ describe OmniAuth::Strategies::Wechat do
         expect(params["appid"]).to eq(['appid'])
         expect(params["redirect_uri"]).to eq([callback_url])
         expect(params["response_type"]).to eq(['code'])
-        expect(params["scope"]).to eq(['snsapi_userinfo'])
+        expect(params["scope"]).to eq(['snsapi_login'])
         expect(params["state"]).to eq([subject.session['omniauth.state']])
       end
 
