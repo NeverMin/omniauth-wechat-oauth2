@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.license      = 'MIT'
 
   s.add_dependency 'omniauth', '~> 1.3.2'
-  s.add_dependency 'omniauth-oauth2', '~> 1.1.1'
+  s.add_dependency 'omniauth-oauth2', '>= 1.1.1'
   s.add_development_dependency 'rspec', '~> 2.7'
 end
