@@ -76,13 +76,17 @@ describe OmniAuth::Strategies::Wechat do
   end
 
   describe "#build_access_token" do
-    specify "request includes 'appid', 'secret', 'code', 'grant_type' and will parse response as json"do 
+    specify "request includes 'appid', 'secret', 'code', 'grant_type' and will parse response as json" do
+      callback_url = "http://exammple.com/callback"
+      subject.stub(:callback_url=>callback_url)
+
       subject.stub(:client => client, :request=>double("request", params:{"code"=>"server_code"}))
       client.should_receive(:get_token).with({
         "appid" => "appid",
         "secret" => "secret",
         "code" => "server_code",
         "grant_type" => "authorization_code",
+        "redirect_uri" => callback_url,
         :parse => :json
       },{})
       subject.send(:build_access_token)
@@ -123,7 +127,7 @@ describe OmniAuth::Strategies::Wechat do
           "province" => "PROVINCE",
           "city" => "CITY",
           "country" => "COUNTRY",
-          "headimgurl" => "header_image_url", 
+          "headimgurl" => "header_image_url",
           "privilege" => ["PRIVILEGE1", "PRIVILEGE2"]
         }
 
