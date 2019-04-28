@@ -19,3 +19,4 @@ tmp
 .yardoc
 _yardoc
 doc/
+.byebug_history

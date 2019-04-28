@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
-gem "rake", "~> 0.9.6"
+gem "rake", "~> 11.3.0"
+gem 'byebug'
 
 gemspec
