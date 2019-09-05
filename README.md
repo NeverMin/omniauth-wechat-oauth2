@@ -76,7 +76,7 @@ Here's an example of an authentication hash available in the callback by accessi
     },
     :extra => {
         :raw_info => {
-          unionid: "unionid",    # if exist
+          unionid:    "unionid", #if exist
           openid:     "openid",
           nickname:   "Nickname",
           sex:        1,
