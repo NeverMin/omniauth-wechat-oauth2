@@ -27,7 +27,7 @@ describe OmniAuth::Strategies::Wechat do
     end
 
     specify 'has authorize_url' do
-      expect(subject.client.options[:authorize_url]).to eq('https://open.weixin.qq.com/connect/qrconnect?#wechat_redirect')
+      expect(subject.client.options[:authorize_url]).to eq('https://open.weixin.qq.com/connect/oauth2/authorize?#wechat_redirect')
     end
 
     specify 'has token_url' do
@@ -99,8 +99,8 @@ describe OmniAuth::Strategies::Wechat do
 
     context "when scope is snsapi_base" do
       let(:access_token) { OAuth2::AccessToken.from_hash(client, {
-        "openid"=>"openid", 
-        "scope"=>"snsapi_base", 
+        "openid"=>"openid",
+        "scope"=>"snsapi_base",
         "access_token"=>"access_token"
       })}
 
@@ -112,8 +112,8 @@ describe OmniAuth::Strategies::Wechat do
 
     context "when scope is snsapi_userinfo" do
       let(:access_token) { OAuth2::AccessToken.from_hash(client, {
-        "openid"=>"openid", 
-        "scope"=>"snsapi_userinfo", 
+        "openid"=>"openid",
+        "scope"=>"snsapi_userinfo",
         "access_token"=>"access_token"
       })}
 
