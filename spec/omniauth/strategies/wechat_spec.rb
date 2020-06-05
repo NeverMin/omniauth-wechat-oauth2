@@ -110,41 +110,44 @@ describe OmniAuth::Strategies::Wechat do
       end
     end
 
-    context "when scope is snsapi_userinfo" do
+    context "when scope is snsapi_login" do
       let(:access_token) { OAuth2::AccessToken.from_hash(client, {
         "openid"=>"openid", 
-        "scope"=>"snsapi_userinfo", 
+        "scope"=>"snsapi_login", 
         "access_token"=>"access_token"
       })}
 
       specify "will query for user info" do
-        response_body = %({"openid": "OPENID","nickname": "\x14\x1fNICKNAME", "sex": "1", "province": "PROVINCE", "city": "CITY", "country": "COUNTRY", "headimgurl": "header_image_url", "privilege": ["PRIVILEGE1", "PRIVILEGE2"]})
-
-        response_hash = {
-          "openid" => "OPENID",
-          "nickname" => "NICKNAME",
-          "sex" => "1",
-          "province" => "PROVINCE",
-          "city" => "CITY",
-          "country" => "COUNTRY",
-          "headimgurl" => "header_image_url",
-          "privilege" => ["PRIVILEGE1", "PRIVILEGE2"]
-        }
-
         client.should_receive(:request).with do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
           expect(opts[:params]).to eq("openid"=> "openid", "lang"=>"zh_CN", "access_token"=> "access_token")
-          expect(opts[:parse]).to eq(:text)
-        end.and_return(double("response", body: response_body))
-
-        expect(subject.raw_info).to eq(response_hash)
+          expect(opts[:parse]).to eq(:json)
+        end.and_return(double("response", parsed: 
+          {
+            openid: "OPENID",
+            nickname: "NICKNAME",
+            sex: "1",
+            province: "PROVINCE",
+            city: "CITY",
+            country: "COUNTRY",
+            headimgurl: "header_image_url",
+            privilege: ["PRIVILEGE1", "PRIVILEGE2"]
+          }
+        ))
+        expect(subject.raw_info).to eq(
+          {
+            openid: "OPENID",
+            nickname: "NICKNAME",
+            sex: "1",
+            province: "PROVINCE",
+            city: "CITY",
+            country: "COUNTRY",
+            headimgurl: "header_image_url",
+            privilege: ["PRIVILEGE1", "PRIVILEGE2"]
+          }
+        )
       end
-
     end
-
   end
-
-
-
 end
