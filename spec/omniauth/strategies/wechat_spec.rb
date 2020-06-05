@@ -100,19 +100,21 @@ describe OmniAuth::Strategies::Wechat do
     context "when scope is snsapi_base" do
       let(:access_token) { OAuth2::AccessToken.from_hash(client, {
         "openid"=>"openid", 
+        "unionid" => "unionid",
         "scope"=>"snsapi_base", 
         "access_token"=>"access_token"
       })}
 
       specify "only have openid" do
-        expect(subject.uid).to eq("openid")
-        expect(subject.raw_info).to eq("openid" => "openid")
+        expect(subject.uid).to eq("unionid")
+        expect(subject.raw_info).to eq("openid" => "openid", "unionid" => "unionid")
       end
     end
 
     context "when scope is snsapi_login" do
       let(:access_token) { OAuth2::AccessToken.from_hash(client, {
         "openid"=>"openid", 
+        "unionid" => "unionid",
         "scope"=>"snsapi_login", 
         "access_token"=>"access_token"
       })}
@@ -126,6 +128,7 @@ describe OmniAuth::Strategies::Wechat do
         end.and_return(double("response", parsed: 
           {
             openid: "OPENID",
+            unionid: "UNIONID",
             nickname: "NICKNAME",
             sex: "1",
             province: "PROVINCE",
@@ -138,6 +141,7 @@ describe OmniAuth::Strategies::Wechat do
         expect(subject.raw_info).to eq(
           {
             openid: "OPENID",
+            unionid: "UNIONID",
             nickname: "NICKNAME",
             sex: "1",
             province: "PROVINCE",

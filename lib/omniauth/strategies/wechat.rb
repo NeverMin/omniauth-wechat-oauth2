@@ -21,7 +21,7 @@ module OmniAuth
       end
 
       uid do
-        raw_info['openid']
+        raw_info['unionid']
       end
 
       info do
@@ -31,7 +31,8 @@ module OmniAuth
           province:   raw_info['province'],
           city:       raw_info['city'],
           country:    raw_info['country'],
-          headimgurl: raw_info['headimgurl']
+          headimgurl: raw_info['headimgurl'],
+          openid:     raw_info['openid']
         }
       end
 
@@ -47,13 +48,12 @@ module OmniAuth
       end
 
       def raw_info
-        @uid ||= access_token["openid"]
         @raw_info ||= begin
           access_token.options[:mode] = :query
           if access_token["scope"]&.include?("snsapi_login")
-            access_token.get("/sns/userinfo", :params => { "openid" => @uid, "lang" => "zh_CN" }, parse: :json).parsed
+            access_token.get("/sns/userinfo", :params => { "openid" => access_token["openid"], "lang" => "zh_CN" }, parse: :json).parsed
           else
-            { "openid" => @uid }
+            { "unionid" => access_token["unionid"], "openid" => access_token["openid"] }
           end
         end
         @raw_info
