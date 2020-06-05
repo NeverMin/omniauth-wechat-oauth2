@@ -47,8 +47,6 @@ module OmniAuth
       end
 
       def raw_info
-        log(:info, "Access token: #{access_token.to_hash}")
-
         @uid ||= access_token["openid"]
         @raw_info ||= begin
           access_token.options[:mode] = :query
@@ -58,7 +56,6 @@ module OmniAuth
             { "openid" => @uid }
           end
         end
-        log(:info, "raw_info: #{@raw_info}")
         @raw_info
       end
 
