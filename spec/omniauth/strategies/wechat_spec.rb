@@ -125,26 +125,41 @@ describe OmniAuth::Strategies::Wechat do
           expect(opts[:parse]).to eq(:json)
         end.and_return(double("response", parsed: 
           {
-            openid: "OPENID",
-            nickname: "NICKNAME",
-            sex: "1",
-            province: "PROVINCE",
-            city: "CITY",
-            country: "COUNTRY",
-            headimgurl: "header_image_url",
-            privilege: ["PRIVILEGE1", "PRIVILEGE2"]
+            "openid" => "OPENID",
+            "nickname" => "NICKNAME",
+            "sex" => "1",
+            "province" => "PROVINCE",
+            "city" => "CITY",
+            "country" => "COUNTRY",
+            "headimgurl" => "header_image_url",
+            "privilege" => ["PRIVILEGE1", "PRIVILEGE2"],
+            "unionid" => "UNIONID"
           }
         ))
+
         expect(subject.raw_info).to eq(
           {
-            openid: "OPENID",
+            "openid" => "OPENID",
+            "nickname" => "NICKNAME",
+            "sex" => "1",
+            "province" => "PROVINCE",
+            "city" => "CITY",
+            "country" => "COUNTRY",
+            "headimgurl" => "header_image_url",
+            "privilege" => ["PRIVILEGE1", "PRIVILEGE2"],
+            "unionid" => "UNIONID"
+          }
+        )
+        expect(subject.info).to eq(
+          {
             nickname: "NICKNAME",
             sex: "1",
             province: "PROVINCE",
             city: "CITY",
             country: "COUNTRY",
             headimgurl: "header_image_url",
-            privilege: ["PRIVILEGE1", "PRIVILEGE2"]
+            image: "header_image_url",
+            unionid: "UNIONID"
           }
         )
       end
