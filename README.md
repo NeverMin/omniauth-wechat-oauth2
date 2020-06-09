@@ -66,7 +66,8 @@ Here's an example of an authentication hash available in the callback by accessi
       province:   "Changning",
       city:       "Shanghai",
       country:    "China",
-      headimgurl: "http://image_url"
+      headimgurl: "http://image_url",
+      unionid:    'unionid'
     },
     :credentials => {
         :token => "token",
@@ -82,7 +83,8 @@ Here's an example of an authentication hash available in the callback by accessi
           province:   "Changning",
           city:       "Shanghai",
           country:    "China",
-          headimgurl: "http://image_url"
+          headimgurl: "http://image_url",
+          unionid:    'unionid'
         }
     }
 }
