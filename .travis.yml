@@ -1,7 +1,16 @@
 before_install:
   - gem install bundler -v 1.17.3
+
 language: ruby
+
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+sudo: false
+
 rvm:
-  - "2.3.7"
-  - "2.4.6"
-  - "2.5.5"
+  - 2.4.10
+  - 2.5.8
+  - 2.6.6
+  - 2.7.1

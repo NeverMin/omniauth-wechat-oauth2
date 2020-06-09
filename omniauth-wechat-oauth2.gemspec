@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.files        = Dir['README.md', 'lib/**/*']
   s.require_path = 'lib'
   s.requirements << 'none'
-  s.required_ruby_version = '>= 2.3.0'
+  s.required_ruby_version = '>= 2.4.0'
 
   s.author       = ['Alex Hu', 'Never Min', 'Eric Guo']
   s.email        = ['askinnyworm@gmail.com', 'Never.Min@gmail.com', 'eric@cloud-mes.com']
