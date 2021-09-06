@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'omniauth', '>= 1.3.2'
   s.add_dependency 'omniauth-oauth2', '>= 1.1.1'
-  s.add_development_dependency 'rspec', '~> 2.99'
+  s.add_development_dependency 'rspec', '~> 3.10.0'
 end
