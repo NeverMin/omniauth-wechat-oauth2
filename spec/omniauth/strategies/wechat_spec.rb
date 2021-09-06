@@ -60,7 +60,7 @@ describe OmniAuth::Strategies::Wechat do
       callback_url = "http://exammple.com/callback"
 
       subject.stub(:callback_url=>callback_url)
-      subject.should_receive(:redirect).with do |redirect_url|
+      expect(subject).to receive(:redirect) do |redirect_url|
         uri = URI.parse(redirect_url)
         expect(uri.fragment).to eq("wechat_redirect")
         params = CGI::parse(uri.query)
@@ -118,7 +118,7 @@ describe OmniAuth::Strategies::Wechat do
       })}
 
       specify "will query for user info" do
-        client.should_receive(:request).with do |verb, path, opts|
+        expect(client).to receive(:request) do |verb, path, opts|
           expect(verb).to eq(:get)
           expect(path).to eq("/sns/userinfo")
           expect(opts[:params]).to eq("openid"=> "openid", "lang"=>"zh_CN", "access_token"=> "access_token")

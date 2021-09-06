@@ -59,7 +59,7 @@ describe OmniAuth::Strategies::WechatQiye do
       callback_url = "http://exammple.com/callback"
 
       subject.stub(:callback_url=>callback_url)
-      subject.should_receive(:redirect).with do |redirect_url|
+      expect(subject).to receive(:redirect) do |redirect_url|
         uri = URI.parse(redirect_url)
         expect(uri.fragment).to eq("wechat_redirect")
         params = CGI::parse(uri.query)
