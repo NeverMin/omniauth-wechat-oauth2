@@ -3,11 +3,11 @@ Omniauth-wechat-oauth2
 
 [![Gem Version](https://img.shields.io/gem/v/omniauth-wechat-oauth2.svg)][gem]
 [![Security Check](https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master.svg)][security]
-[![Build Status](https://travis-ci.org/NeverMin/omniauth-wechat-oauth2.svg)][travis]
+[![Build Status](https://app.travis-ci.com/Eric-Guo/omniauth-wechat-oauth2.svg?branch=master)][travis]
 
 [gem]: https://rubygems.org/gems/omniauth-wechat-oauth2
 [security]: https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master
-[travis]: https://travis-ci.org/NeverMin/omniauth-wechat-oauth2
+[travis]: https://app.travis-ci.com/github/Eric-Guo/omniauth-wechat-oauth2
 
 
 Wechat OAuth2 Strategy for OmniAuth 1.0.
