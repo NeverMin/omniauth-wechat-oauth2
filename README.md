@@ -1,13 +1,21 @@
 Omniauth-wechat-oauth2
 ======================
 
-[![Build Status](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2.svg)](https://travis-ci.org/skinnyworm/omniauth-wechat-oauth2) [![Gem Version](https://badge.fury.io/rb/omniauth-wechat-oauth2.png)](http://badge.fury.io/rb/omniauth-wechat-oauth2)
+[![Gem Version](https://img.shields.io/gem/v/omniauth-wechat-oauth2.svg)][gem]
+[![Security Check](https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master.svg)][security]
+[![Build Status](https://app.travis-ci.com/Eric-Guo/omniauth-wechat-oauth2.svg?branch=master)][travis]
 
-Wechat OAuth2 Strategy for OmniAuth 1.0. 
+[gem]: https://rubygems.org/gems/omniauth-wechat-oauth2
+[security]: https://hakiri.io/github/NeverMin/omniauth-wechat-oauth2/master
+[travis]: https://app.travis-ci.com/github/Eric-Guo/omniauth-wechat-oauth2
 
-You need to get a wechat API key at: http://mp.weixin.qq.com
 
-Wechat oauth2 specification can be found at: http://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
+Wechat OAuth2 Strategy for OmniAuth 1.0.
+
+You need to get a wechat API key at: https://mp.weixin.qq.com
+
+* Wechat oauth2 specification can be found at: https://mp.weixin.qq.com/wiki/index.php?title=网页授权获取用户基本信息
+* Wechat Qiye oauth2 specification can be found at: http://qydev.weixin.qq.com/wiki/index.php?title=OAuth验证接口
 
 ## Installation
 
@@ -59,7 +67,8 @@ Here's an example of an authentication hash available in the callback by accessi
       province:   "Changning",
       city:       "Shanghai",
       country:    "China",
-      headimgurl: "http://image_url"
+      headimgurl: "http://image_url",
+      unionid:    'unionid'
     },
     :credentials => {
         :token => "token",
@@ -75,12 +84,55 @@ Here's an example of an authentication hash available in the callback by accessi
           province:   "Changning",
           city:       "Shanghai",
           country:    "China",
-          headimgurl: "http://image_url"
+          headimgurl: "http://image_url",
+          unionid:    'unionid'
         }
     }
 }
 ```
 
+## Wechat Qiye OAuth2
 
+Wechat Qiey usage and configuration are the same with normal account above.
 
+```ruby
+config.omniauth :wechat_qiye, ENV["WECHAT_APP_ID"], ENV["WECHAT_APP_SECRET"],
+    :authorize_params => {:scope => "snsapi_base"}
+```
 
+Auth hash `request.env["omniauth.auth"]`
+
+```ruby
+{
+    :provider => "wechat_qiye",
+    :uid => "123456789",
+    :info => {
+      userid: "userid",
+      name: "name",
+      department: [2],
+      gender: "1",
+      weixinid: "weixinid",
+      avatar: "avatar",
+      status: 1,
+      extattr: {"foo" => "bar"}
+    },
+    :credentials => {
+        :token => "token",
+        :refresh_token => "another_token",
+        :expires_at => 7200,
+        :expires => true
+    },
+    :extra => {
+        :raw_info => {
+          userid: "userid",
+          name: "name",
+          department: [2],
+          gender: "1",
+          weixinid: "weixinid",
+          avatar: "avatar",
+          status: 1,
+          extattr: {"foo" => "bar"}}
+        }
+    }
+}
+```
