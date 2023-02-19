@@ -12,6 +12,9 @@ Gem::Specification.new do |s|
   s.requirements << 'none'
   s.required_ruby_version = '>= 2.4.0'
 
+  s.cert_chain  = ['certs/Eric-Guo.pem']
+  s.signing_key = File.expand_path('~/.ssh/gem-private_key.pem') if $PROGRAM_NAME.end_with?('gem')
+
   s.author       = ['Alex Hu', 'Never Min', 'Eric Guo']
   s.email        = ['askinnyworm@gmail.com', 'Never.Min@gmail.com', 'eric@cloud-mes.com']
   s.homepage     = 'https://github.com/nevermin/omniauth-wechat-oauth2'
