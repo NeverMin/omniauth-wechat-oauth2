@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.homepage     = 'https://github.com/nevermin/omniauth-wechat-oauth2'
   s.license      = 'MIT'
 
-  s.add_dependency 'omniauth-oauth2', '>= 1.7.3'
+  s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
   s.add_development_dependency 'rspec', '~> 3.10.0'
 end
