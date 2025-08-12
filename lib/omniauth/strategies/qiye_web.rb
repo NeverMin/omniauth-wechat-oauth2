@@ -7,7 +7,7 @@ module OmniAuth
 
       option :client_options, {
                                 site: "https://qyapi.weixin.qq.com",
-                                authorize_url: "https://open.work.weixin.qq.com/wwopen/sso/qrConnect",
+                                authorize_url: "https://login.work.weixin.qq.com/wwlogin/sso/login",
                                 token_url: "/cgi-bin/gettoken",
                                 token_method: :get,
                                 connection_opts: {
@@ -45,22 +45,19 @@ module OmniAuth
       end
 
       def request_phase
-        # Build WeCom web login URL per docs: qrConnect requires appid (corp id), agentid, redirect_uri, state, etc.
+        # Build WeCom web login URL per docs
+        # https://developer.work.weixin.qq.com/document/path/98152#2-构造企业微信登录链接
         ap = authorize_params.dup
-        ap['agentid'] ||= options.agentid
-        ap['login_type'] ||= 'CorpApp'
 
-        raise ArgumentError, 'agentid is required for QiyeWeb strategy' if ap['agentid'].to_s.strip.empty?
+        raise ArgumentError, 'agentid is required for QiyeWeb strategy' if options.agentid.zero?
 
         params = {
+          'login_type' => ap['login_type'] || 'CorpApp',
           'appid' => client.id,
-          'agentid' => ap['agentid'],
-          'redirect_uri' => callback_url
+          'agentid' => options.agentid,
+          'redirect_uri' => callback_url,
+          'state' => ap['state']
         }
-        params['state'] = ap['state'] if ap['state']
-        params['login_type'] = ap['login_type'] if ap['login_type']
-        params['lang'] = ap['lang'] if ap['lang']
-        params['href'] = ap['href'] if ap['href']
 
         redirect client.authorize_url(params)
       end
