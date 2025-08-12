@@ -21,5 +21,5 @@ Gem::Specification.new do |s|
   s.license      = 'MIT'
 
   s.add_dependency 'omniauth-oauth2', '>= 1.8.0'
-  s.add_development_dependency 'rspec', '~> 3.10.0'
+  s.add_development_dependency 'rspec', '~> 3.13.1'
 end
