@@ -22,17 +22,33 @@ module OmniAuth
       option :agentid, nil
 
       uid do
-        @uid || raw_info
+        u = @uid || raw_info
+        Rails.logger.info("[OmniAuth::QiyeWeb] uid=#{u.inspect}") if defined?(Rails) && Rails.respond_to?(:logger)
+        u
       end
 
       info do
-        {
-          userid: uid
-        }
+        info_hash = { userid: uid }
+        Rails.logger.info("[OmniAuth::QiyeWeb] info=#{info_hash.inspect}") if defined?(Rails) && Rails.respond_to?(:logger)
+        info_hash
       end
 
       extra do
         { raw_info: nil }
+      end
+
+      def callback_phase
+        begin
+          params_for_log = request.params.dup
+          params_for_log['code'] = '[FILTERED]' if params_for_log['code']
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase params=#{params_for_log.inspect} session_state=#{session['omniauth.state']} provider_ignores_state=#{options.provider_ignores_state}") if defined?(Rails) && Rails.respond_to?(:logger)
+        rescue StandardError => e
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase prelog error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+        end
+        super
+      rescue StandardError => e
+        Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+        raise
       end
 
       def request_phase
@@ -50,20 +66,31 @@ module OmniAuth
           'state' => ap['state']
         }
 
-        redirect client.authorize_url(params)
+        url = client.authorize_url(params)
+        Rails.logger.info("[OmniAuth::QiyeWeb] request_phase redirect_to=#{url} params=#{params.inspect}") if defined?(Rails) && Rails.respond_to?(:logger)
+        redirect url
       end
 
       def raw_info
         # step 2: get userid via code and access_token
         @code ||= request.params['code']
 
+        Rails.logger.info("[OmniAuth::QiyeWeb] raw_info start code_present=#{!@code.to_s.empty?}") if defined?(Rails) && Rails.respond_to?(:logger)
+
         # step 3: get user info via userid
         @uid ||= begin
           access_token.options[:mode] = :query
           response = access_token.get('/cgi-bin/auth/getuserinfo', params: { 'code' => @code }, parse: :json)
+          Rails.logger.info("[OmniAuth::QiyeWeb] getuserinfo status=#{response.status} body_keys=#{response.parsed.is_a?(Hash) ? response.parsed.keys : response.parsed.class}") if defined?(Rails) && Rails.respond_to?(:logger)
           # Support both key variants returned by different endpoints
           response.parsed['userid'] || response.parsed['UserId']
         end
+      rescue ::OAuth2::Error => e
+        Rails.logger.info("[OmniAuth::QiyeWeb] raw_info oauth2_error status=#{e.response&.status} body=#{e.response&.body}") if defined?(Rails) && Rails.respond_to?(:logger)
+        raise
+      rescue StandardError => e
+        Rails.logger.info("[OmniAuth::QiyeWeb] raw_info error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+        raise
       end
 
       protected
@@ -76,7 +103,16 @@ module OmniAuth
         }.merge(token_params.to_hash(symbolize_keys: true))
 
         # Fetch access_token via gettoken without using the OAuth code
-        client.get_token(params, deep_symbolize(options.auth_token_params))
+        Rails.logger.info("[OmniAuth::QiyeWeb] build_access_token token_url=#{client.token_url} token_method=#{client.options[:token_method]} params_keys=#{params.keys}") if defined?(Rails) && Rails.respond_to?(:logger)
+        token = client.get_token(params, deep_symbolize(options.auth_token_params))
+        Rails.logger.info("[OmniAuth::QiyeWeb] build_access_token success token_present=#{!token.token.to_s.empty?} expires_in=#{token.expires_in}") if defined?(Rails) && Rails.respond_to?(:logger)
+        token
+      rescue ::OAuth2::Error => e
+        Rails.logger.info("[OmniAuth::QiyeWeb] build_access_token oauth2_error status=#{e.response&.status} body=#{e.response&.body}") if defined?(Rails) && Rails.respond_to?(:logger)
+        raise
+      rescue StandardError => e
+        Rails.logger.info("[OmniAuth::QiyeWeb] build_access_token error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+        raise
       end
     end
   end
