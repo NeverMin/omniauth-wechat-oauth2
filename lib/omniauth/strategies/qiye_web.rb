@@ -22,9 +22,7 @@ module OmniAuth
       option :agentid, nil
 
       uid do
-        u = @uid || raw_info
-        Rails.logger.info("[OmniAuth::QiyeWeb] uid=#{u.inspect}")
-        u
+        @uid || raw_info
       end
 
       info do
@@ -108,9 +106,9 @@ module OmniAuth
         @uid ||= begin
           access_token.options[:mode] = :query
           response = access_token.get('/cgi-bin/auth/getuserinfo', params: { 'code' => @code }, parse: :json)
-          Rails.logger.info("[OmniAuth::QiyeWeb] getuserinfo status=#{response.status} body_keys=#{response.parsed.is_a?(Hash) ? response.parsed : response.parsed.class} response=#{response.inspect}")
-          # Support both key variants returned by different endpoints
-          response.parsed['userid'] || response.parsed['UserId']
+          Rails.logger.info("[OmniAuth::QiyeWeb] getuserinfo status=#{response.status} body_keys=#{response.parsed.inspect}")
+          # response.parsed is https://gitlab.com/ruby-oauth/snaky_hash
+          response.parsed['userid']
         end
       rescue ::OAuth2::Error => e
         Rails.logger.info("[OmniAuth::QiyeWeb] raw_info oauth2_error status=#{e.response&.status} body=#{e.response&.body}")
