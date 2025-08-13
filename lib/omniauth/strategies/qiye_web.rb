@@ -22,12 +22,12 @@ module OmniAuth
       option :agentid, nil
 
       uid do
-        raw_info
+        @uid || raw_info
       end
 
       info do
         {
-          userid: raw_info
+          userid: uid
         }
       end
 
@@ -40,7 +40,7 @@ module OmniAuth
         # https://developer.work.weixin.qq.com/document/path/98152#2-构造企业微信登录链接
         ap = authorize_params.dup
 
-        raise ArgumentError, 'agentid is required for QiyeWeb strategy' if options.agentid.zero?
+        raise ArgumentError, 'agentid is required for QiyeWeb strategy' if options.agentid.to_i <= 0
 
         params = {
           'login_type' => ap['login_type'] || 'CorpApp',
@@ -55,29 +55,28 @@ module OmniAuth
 
       def raw_info
         # step 2: get userid via code and access_token
-        @code ||= access_token[:code]
+        @code ||= request.params['code']
 
         # step 3: get user info via userid
         @uid ||= begin
           access_token.options[:mode] = :query
           response = access_token.get('/cgi-bin/auth/getuserinfo', params: { 'code' => @code }, parse: :json)
-          response.parsed['userid']
+          # Support both key variants returned by different endpoints
+          response.parsed['userid'] || response.parsed['UserId']
         end
       end
 
       protected
 
       def build_access_token
-        # step 0: wechat respond code
-        code = request.params['code']
-
         # step 1: get access token
         params = {
           'corpid' => client.id,
           'corpsecret' => client.secret
         }.merge(token_params.to_hash(symbolize_keys: true))
 
-        client.get_token(params, deep_symbolize(options.auth_token_params.merge({ code: code })))
+        # Fetch access_token via gettoken without using the OAuth code
+        client.get_token(params, deep_symbolize(options.auth_token_params))
       end
     end
   end
