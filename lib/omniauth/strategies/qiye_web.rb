@@ -3,20 +3,18 @@ require "omniauth-oauth2"
 module OmniAuth
   module Strategies
     class QiyeWeb < OmniAuth::Strategies::OAuth2
-      option :name, "qiye_web"
+      option :name, 'qiye_web'
 
-      option :client_options, {
-                                site: "https://qyapi.weixin.qq.com",
-                                authorize_url: "https://login.work.weixin.qq.com/wwlogin/sso/login",
-                                token_url: "/cgi-bin/gettoken",
+      option :client_options, { site: 'https://qyapi.weixin.qq.com',
+                                authorize_url: 'https://login.work.weixin.qq.com/wwlogin/sso/login',
+                                token_url: '/cgi-bin/gettoken',
                                 token_method: :get,
                                 connection_opts: {
                                   ssl: { verify: false }
-                                }
-                              }
+                                } }
 
       # Allow passing these via strategy options or per-request params
-      option :authorize_options, [:agentid, :state, :login_type, :lang, :href]
+      option :authorize_options, %i[agentid state login_type]
 
       option :token_params, { parse: :json }
 
@@ -24,24 +22,17 @@ module OmniAuth
       option :agentid, nil
 
       uid do
-        raw_info['userid']
+        raw_info
       end
 
       info do
         {
-          userid:     raw_info['userid'],
-          name:       raw_info['name'],
-          department: raw_info['department'],
-          gender:     raw_info['gender'],
-          weixinid:   raw_info['weixinid'],
-          avatar:     raw_info['avatar'],
-          status:     raw_info['status'],
-          extattr:    raw_info['extattr']
+          userid: raw_info
         }
       end
 
       extra do
-        { raw_info: raw_info }
+        { raw_info: nil }
       end
 
       def request_phase
