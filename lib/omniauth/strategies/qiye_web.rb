@@ -69,14 +69,8 @@ module OmniAuth
         # step 3: get user info via userid
         @uid ||= begin
           access_token.options[:mode] = :query
-          response = access_token.get('/cgi-bin/user/getuserinfo', params: { 'code' => @code }, parse: :json)
-          response.parsed['UserId']
-        end
-
-        @raw_info ||= begin
-          access_token.options[:mode] = :query
-          response = access_token.get('/cgi-bin/user/get', params: { 'userid' => @uid }, parse: :json)
-          response.parsed
+          response = access_token.get('/cgi-bin/auth/getuserinfo', params: { 'code' => @code }, parse: :json)
+          response.parsed['userid']
         end
       end
 

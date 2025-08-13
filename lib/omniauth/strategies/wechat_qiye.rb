@@ -64,6 +64,7 @@ module OmniAuth
       end
 
       protected
+      
       def build_access_token
         # step 0: wechat respond code
         code = request.params['code']
