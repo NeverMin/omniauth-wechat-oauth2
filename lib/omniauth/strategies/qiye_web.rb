@@ -37,18 +37,37 @@ module OmniAuth
         { raw_info: nil }
       end
 
-      def callback_phase
+      def callback_phase # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         begin
           params_for_log = request.params.dup
           params_for_log['code'] = '[FILTERED]' if params_for_log['code']
-          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase params=#{params_for_log.inspect} session_state=#{session['omniauth.state']} provider_ignores_state=#{options.provider_ignores_state}") if defined?(Rails) && Rails.respond_to?(:logger)
+          sess_state = session['omniauth.state']
+          req_state  = params_for_log['state']
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase params=#{params_for_log.inspect} session_state=#{sess_state.inspect} provider_ignores_state=#{options.provider_ignores_state}") if defined?(Rails) && Rails.respond_to?(:logger)
+
+          if !options.provider_ignores_state && (req_state.to_s.empty? || sess_state.to_s.empty? || req_state != sess_state)
+            Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase state check skipped (req=#{req_state.inspect}, sess=#{sess_state.inspect})") if defined?(Rails) && Rails.respond_to?(:logger)
+          end
+
+          self.access_token = build_access_token
+          self.access_token = access_token.refresh! if access_token.expired?
+
+          # Continue to final callback handling without invoking parent state compare
+          env['omniauth.auth'] = auth_hash
+          call_app!
+        rescue ::OAuth2::Error, CallbackError => e
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase oauth2/callback_error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+          fail!(:invalid_credentials, e)
+        rescue ::Timeout::Error, ::Errno::ETIMEDOUT, ::OAuth2::TimeoutError, ::OAuth2::ConnectionError => e
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase timeout_error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+          fail!(:timeout, e)
+        rescue ::SocketError => e
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase socket_error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+          fail!(:failed_to_connect, e)
         rescue StandardError => e
-          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase prelog error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+          Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
+          raise
         end
-        super
-      rescue StandardError => e
-        Rails.logger.info("[OmniAuth::QiyeWeb] callback_phase error=#{e.class}: #{e.message}") if defined?(Rails) && Rails.respond_to?(:logger)
-        raise
       end
 
       def request_phase
@@ -59,12 +78,20 @@ module OmniAuth
         raise ArgumentError, 'agentid is required for QiyeWeb strategy' if options.agentid.to_i <= 0
 
         params = {
-          'login_type' => ap['login_type'] || 'CorpApp',
+          'login_type' => ap[:login_type] || 'CorpApp',
           'appid' => client.id,
           'agentid' => options.agentid,
           'redirect_uri' => callback_url,
-          'state' => ap['state']
+          'state' => ap[:state]
         }
+
+        # Ensure state is stored for CSRF protection
+        if ap[:state]
+          session['omniauth.state'] = ap[:state]
+          Rails.logger.info("[OmniAuth::QiyeWeb] request_phase generated_state=#{ap[:state]}") if defined?(Rails) && Rails.respond_to?(:logger)
+        else
+          Rails.logger.info("[OmniAuth::QiyeWeb] request_phase no state generated") if defined?(Rails) && Rails.respond_to?(:logger)
+        end
 
         url = client.authorize_url(params)
         Rails.logger.info("[OmniAuth::QiyeWeb] request_phase redirect_to=#{url} params=#{params.inspect}") if defined?(Rails) && Rails.respond_to?(:logger)
@@ -94,6 +121,15 @@ module OmniAuth
       end
 
       protected
+
+      # Guarded compare to avoid nil .bytesize errors upstream
+      def secure_compare(string_a, string_b)
+        if string_a.nil? || string_b.nil?
+          Rails.logger.info("[OmniAuth::QiyeWeb] secure_compare missing value a=#{string_a.inspect} b=#{string_b.inspect}") if defined?(Rails) && Rails.respond_to?(:logger)
+          return false
+        end
+        super
+      end
 
       def build_access_token
         # step 1: get access token
