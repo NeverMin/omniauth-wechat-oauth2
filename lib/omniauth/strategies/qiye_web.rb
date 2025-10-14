@@ -71,7 +71,7 @@ module OmniAuth
       def request_phase
         # Build WeCom web login URL per docs
         # https://developer.work.weixin.qq.com/document/path/98152#2-构造企业微信登录链接
-        ap = authorize_params.dup
+        ap = options.authorize_options.dup
 
         raise ArgumentError, 'agentid is required for QiyeWeb strategy' if options.agentid.to_i <= 0
 
