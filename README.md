@@ -93,6 +93,37 @@ Here's an example of an authentication hash available in the callback by accessi
 
 ## Wechat Qiye OAuth2
 
+Both enterprise strategies (`qiye_web` and `wechat_qiye`) require a successful
+WeCom API response (`errcode: 0`) and a nonempty member `userid`. A corporate
+access token does not authenticate a user: the callback's authorization code
+must also resolve to a member. Invalid codes, API errors, malformed responses,
+and nonmember identities fail authentication without invoking the application
+callback. TLS certificate verification is enabled by default.
+
+### WeCom web login
+
+```ruby
+config.omniauth :qiye_web, ENV['WECOM_CORP_ID'], ENV['WECOM_CORP_SECRET'],
+    agentid: ENV['WECOM_AGENT_ID']
+```
+
+Start login through OmniAuth's POST request phase with your application's CSRF
+protection. Keep `provider_ignores_state` at its default (`false`): the callback
+must return the generated state in the same browser session. State is consumed
+when checked, so a completed callback cannot be replayed. If valid logins fail
+with `csrf_detected`, check the session cookie, callback host, and proxy/HTTPS
+configuration instead of disabling state validation.
+
+When upgrading an existing deployment, publish or pin the fixed gem revision,
+update the application's lockfile, and restart its processes. A Bundler local
+override only changes the developer's checkout. This fix does not invalidate
+previously issued application sessions or tokens; revoke those associated with
+any confirmed unauthorized login separately. Applications should also reject
+blank `auth.uid` values before looking up local accounts and avoid logging the
+full authentication hash, which contains credentials.
+
+### Legacy enterprise OAuth2
+
 Wechat Qiey usage and configuration are the same with normal account above.
 
 ```ruby

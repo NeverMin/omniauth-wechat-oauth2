@@ -1,18 +1,18 @@
 require "omniauth-oauth2"
+require "omniauth/strategies/wecom_validation"
 
 module OmniAuth
   module Strategies
     class WechatQiye < OmniAuth::Strategies::OAuth2
+      include WecomValidation
+
       option :name, "wechat_qiye"
 
       option :client_options, {
                                 :site => "https://qyapi.weixin.qq.com",
                                 authorize_url: "https://open.weixin.qq.com/connect/oauth2/authorize#wechat_redirect",
                                 token_url:     "/cgi-bin/gettoken",
-                                token_method:  :get,
-                                connection_opts: {
-                                    ssl: { verify: false }
-                                }
+                                token_method:  :get
                               }
 
       option :authorize_params, {scope: "snsapi_userinfo"}
@@ -46,35 +46,22 @@ module OmniAuth
       end
 
       def raw_info
-        # step 2: get userid via code and access_token
-        @code ||= access_token[:code]
-
-        # step 3: get user info via userid
         @uid ||= begin
           access_token.options[:mode] = :query
-          response = access_token.get('/cgi-bin/user/getuserinfo', :params => {'code' => @code}, parse: :json)
-          response.parsed['UserId']
+          response = access_token.get('/cgi-bin/user/getuserinfo',
+                                      :params => {'code' => authorization_code}, parse: :json)
+          wecom_userid(wecom_response(response))
         end
 
         @raw_info ||= begin
           access_token.options[:mode] = :query
           response = access_token.get("/cgi-bin/user/get", :params => {"userid" => @uid}, parse: :json)
-          response.parsed
+          data = wecom_response(response)
+          unless wecom_userid(data).casecmp(@uid).zero?
+            raise CallbackError.new(:invalid_uid, 'WeCom member profile does not match the authenticated userid')
+          end
+          data
         end
-      end
-
-      protected
-      
-      def build_access_token
-        # step 0: wechat respond code
-        code = request.params['code']
-
-        # step 1: get access token
-        params = {
-            'corpid' => client.id,
-            'corpsecret' => client.secret,
-        }.merge(token_params.to_hash(symbolize_keys: true))
-        client.get_token(params, deep_symbolize(options.auth_token_params.merge({code: code})))
       end
     end
   end

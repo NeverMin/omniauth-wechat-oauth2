@@ -62,7 +62,7 @@ describe OmniAuth::Strategies::WechatQiye do
       expect(subject).to receive(:redirect) do |redirect_url|
         uri = URI.parse(redirect_url)
         expect(uri.fragment).to eq("wechat_redirect")
-        params = CGI::parse(uri.query)
+        params = Rack::Utils.parse_query(uri.query).transform_values { |value| [value] }
         expect(params["appid"]).to eq(['corpid'])
         expect(params["redirect_uri"]).to eq([callback_url])
         expect(params["response_type"]).to eq(['code'])
@@ -81,7 +81,7 @@ describe OmniAuth::Strategies::WechatQiye do
         "corpid" => "corpid",
         "corpsecret" => "corpsecret",
         :parse => :json
-      },{:code => "server_code"})
+      },{}).and_return(OAuth2::AccessToken.new(client, 'access_token', 'errcode' => 0))
       subject.send(:build_access_token)
     end
   end
@@ -92,10 +92,14 @@ describe OmniAuth::Strategies::WechatQiye do
       "access_token"=>"access_token",
       :code => "server_code"
     })}
-    before { subject.stub(:access_token => access_token) }
+    before do
+      subject.stub(:access_token => access_token)
+      allow(request).to receive(:params).and_return('code' => 'server_code')
+    end
 
     specify "will query for user info" do
       response_hash = {
+        "errcode" => 0,
         "userid" => "USERID",
         "name" => "NAME",
         "department" => [2],
@@ -107,7 +111,7 @@ describe OmniAuth::Strategies::WechatQiye do
       }
 
       userid_response = double("response", body: {"UserId" => 'USERID'}.to_json)
-      userid_response.stub(:parsed).and_return({"UserId" => 'USERID'})
+      userid_response.stub(:parsed).and_return({"errcode" => 0, "UserId" => 'USERID'})
 
       userinfo_params = {params: {"code"=> "server_code", "access_token"=> "access_token"}, parse: :json}
       client.should_receive(:request).with(:get, "/cgi-bin/user/getuserinfo", userinfo_params)

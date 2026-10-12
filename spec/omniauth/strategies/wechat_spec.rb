@@ -63,7 +63,7 @@ describe OmniAuth::Strategies::Wechat do
       expect(subject).to receive(:redirect) do |redirect_url|
         uri = URI.parse(redirect_url)
         expect(uri.fragment).to eq("wechat_redirect")
-        params = CGI::parse(uri.query)
+        params = Rack::Utils.parse_query(uri.query).transform_values { |value| [value] }
         expect(params["appid"]).to eq(['appid'])
         expect(params["redirect_uri"]).to eq([callback_url])
         expect(params["response_type"]).to eq(['code'])
